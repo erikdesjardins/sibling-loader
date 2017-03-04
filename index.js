@@ -6,25 +6,24 @@
 'use strict';
 
 var path = require('path');
-var loaderUtils = require('loader-utils');
 
 module.exports = function() {};
 
 module.exports.pitch = function(request) {
 	var callback = this.async();
 
-	var context = ''; // todo
+	var relativeContext = path.dirname(request);
+	var extension = '.' + request.split('.').slice(-1)[0];
 
 	// add context dependency so new files are picked up
-	this.addContextDependency(context);
+	this.addContextDependency(relativeContext);
 
-	this.fs.readdir(context, function(err, files) {
+	this.fs.readdir(this.context, function(err, files) {
 		if (err) return callback(err);
 
 		var matchingFiles = files
 			.filter(function(filename) {
-				// todo filter
-				return match.test(filename);
+				return filename.endsWith(extension);
 			})
 			.map(function(filename, i) {
 				return {
@@ -37,7 +36,7 @@ module.exports.pitch = function(request) {
 
 		var importStatements = matchingFiles
 			.map(function(info) {
-				return 'import * as ' + info.id + ' from ' + JSON.stringify(path.join(context, info.name)) + ';';
+				return 'import * as ' + info.id + ' from ' + JSON.stringify('.' + path.sep + path.join(relativeContext, info.name)) + ';';
 			})
 			.join('\n');
 
