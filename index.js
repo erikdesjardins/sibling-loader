@@ -12,13 +12,13 @@ module.exports = function() {};
 module.exports.pitch = function(request) {
 	var callback = this.async();
 
-	var relativeContext = path.dirname(request);
-	var extension = '.' + request.split('.').slice(-1)[0];
+	var context = this.context;
+	var extension = request.slice(request.lastIndexOf('.'));
 
 	// add context dependency so new files are picked up
-	this.addContextDependency(relativeContext);
+	this.addContextDependency(context);
 
-	this.fs.readdir(this.context, function(err, files) {
+	this.fs.readdir(context, function(err, files) {
 		if (err) return callback(err);
 
 		var matchingFiles = files
@@ -36,7 +36,7 @@ module.exports.pitch = function(request) {
 
 		var importStatements = matchingFiles
 			.map(function(info) {
-				return 'import * as ' + info.id + ' from ' + JSON.stringify('.' + path.sep + path.join(relativeContext, info.name)) + ';';
+				return 'import * as ' + info.id + ' from ' + JSON.stringify(path.join(context, info.name)) + ';';
 			})
 			.join('\n');
 
