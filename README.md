@@ -22,6 +22,8 @@ import * as _2 from "./abc/baz.js";
 export default { "foo.js": _0, "bar.js": _1, "baz.js": _2 };
 ```
 
+i.e. all files with the same extension are imported.
+
 ## Installation
 
 `npm install --save-dev sibling-loader`

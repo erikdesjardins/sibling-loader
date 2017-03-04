@@ -1,6 +1,6 @@
 {
   "name": "sibling-loader",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Webpack loader to import a file and its siblings.",
   "main": "index.js",
   "scripts": {
@@ -21,9 +21,6 @@
   "homepage": "https://github.com/erikdesjardins/sibling-loader#readme",
   "peerDependencies": {
     "webpack": ">=2.2.0"
-  },
-  "dependencies": {
-    "loader-utils": "^1.0.2"
   },
   "devDependencies": {
     "ava": "^0.18.2"
