@@ -29,6 +29,5 @@ export default { "foo.js": _0, "bar.js": _1, "baz.js": _2 };
 ## Usage
 
 ```js
-// trailing slash is important
 import modules from 'sibling-loader!./path/to/file';
 ```
