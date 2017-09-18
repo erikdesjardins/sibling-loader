@@ -4,12 +4,13 @@ import test from 'ava';
 
 import loader from '../index';
 
-function runLoader(request) {
+function runLoader(request, query) {
 	return new Promise((resolve, reject) => {
 		loader.pitch.call({
 			context: path.dirname(path.join(__dirname, request)),
 			async: () => (err, result) => err ? reject(err) : resolve(result),
 			addContextDependency: () => {},
+			query,
 			fs,
 		}, request);
 	});
@@ -70,6 +71,45 @@ ${header}
 import * as _0 from ${p('./src/bar.md')};
 import * as _1 from ${p('./src/foo.md')};
 export default { "bar.md": _0, "foo.md": _1 };
+		`.trim()
+	);
+});
+
+test('import=*', async t => {
+	t.is(
+		await runLoader('./src/a.js', '?import=*'),
+		`
+${header}
+import * as _0 from ${p('./src/a.js')};
+import * as _1 from ${p('./src/b.js')};
+import * as _2 from ${p('./src/c.js')};
+export default { "a.js": _0, "b.js": _1, "c.js": _2 };
+		`.trim()
+	);
+});
+
+test('import=default', async t => {
+	t.is(
+		await runLoader('./src/a.js', '?import=default'),
+		`
+${header}
+import { default as _0 } from ${p('./src/a.js')};
+import { default as _1 } from ${p('./src/b.js')};
+import { default as _2 } from ${p('./src/c.js')};
+export default { "a.js": _0, "b.js": _1, "c.js": _2 };
+		`.trim()
+	);
+});
+
+test('import=someExportedName', async t => {
+	t.is(
+		await runLoader('./src/a.js', '?import=someExportedName'),
+		`
+${header}
+import { someExportedName as _0 } from ${p('./src/a.js')};
+import { someExportedName as _1 } from ${p('./src/b.js')};
+import { someExportedName as _2 } from ${p('./src/c.js')};
+export default { "a.js": _0, "b.js": _1, "c.js": _2 };
 		`.trim()
 	);
 });
