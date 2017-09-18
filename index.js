@@ -6,11 +6,15 @@
 'use strict';
 
 var path = require('path');
+var loaderUtils = require('loader-utils');
 
 module.exports = function() {};
 
 module.exports.pitch = function(request) {
 	var callback = this.async();
+
+	var options = loaderUtils.getOptions(this) || {};
+	var _import = options.import || '*';
 
 	var context = this.context;
 	var extension = request.slice(request.lastIndexOf('.'));
@@ -36,7 +40,13 @@ module.exports.pitch = function(request) {
 
 		var importStatements = matchingFiles
 			.map(function(info) {
-				return 'import * as ' + info.id + ' from ' + JSON.stringify(path.join(context, info.name)) + ';';
+				return 'import ' +
+					(_import === '*' ?
+						'* as ' + info.id :
+						'{ ' + _import + ' as ' + info.id + ' }') +
+					' from ' +
+					JSON.stringify(path.join(context, info.name)) +
+					';';
 			})
 			.join('\n');
 
