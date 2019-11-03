@@ -16,8 +16,8 @@ function runLoader(request, query) {
 	});
 }
 
-test('invalid path', t => {
-	t.throws(runLoader('./notARealPath/something.js'), /ENOENT/);
+test('invalid path', async t => {
+	await t.throwsAsync(runLoader('./notARealPath/something.js'), /ENOENT/);
 });
 
 test('adds a context dependency', async t => {

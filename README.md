@@ -1,4 +1,4 @@
-# sibling-loader [![Build Status](https://travis-ci.org/erikdesjardins/sibling-loader.svg?branch=master)](https://travis-ci.org/erikdesjardins/sibling-loader)
+# sibling-loader
 
 Webpack loader to import a file and its siblings.
 
